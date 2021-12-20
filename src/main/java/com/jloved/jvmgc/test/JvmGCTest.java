@@ -1,6 +1,8 @@
 package com.jloved.jvmgc.test;
 
-import java.util.Scanner;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.util.List;
 
 /**
  * @author jiangxl
@@ -12,36 +14,40 @@ import java.util.Scanner;
 public class JvmGCTest {
 
   public static void main(String[] args) {
-    Scanner scan = new Scanner(System.in);
-    System.out.println("请输入数字1: ");
-    if (scan.hasNextInt()) {
-      if (scan.nextInt() == 1) {
-        byte[] array1 = new byte[4 * 1024 * 1024];
-        array1 = null;
-        System.out.println("请输入数字2: ");
-        if (scan.nextInt() == 2) {
-          byte[] array2 = new byte[2 * 1024 * 1024];
-          byte[] array3 = new byte[2 * 1024 * 1024];
-          byte[] array4 = new byte[2 * 1024 * 1024];
-        }
-        System.out.println("请输入数字3: ");
-        if (scan.nextInt() == 3) {
-          byte[] array5 = new byte[128 * 1024];
-        }
-        System.out.println("请输入数字4: ");
-        if (scan.nextInt() == 4) {
-          byte[] array6 = new byte[2 * 1024 * 1024];
-        }
-        while (true) {
-          System.out.println("请输入数字5: ");
-          if (scan.nextInt() == 5) {
-            byte[] array7 = new byte[2 * 1024 * 1024];
-            array7 = null;
-          }
-        }
-      }
-    }
+
+    // 启动项目，新生代内存消耗4M左右
+    System.out.println("\n\r1、================");
+    byte[] array1 = new byte[4 * 1024 * 1024];
+    array1 = null;
+    prinfMemInfo();
+
+    System.out.println("\n\r2、================");
+    byte[] array2 = new byte[2 * 1024 * 1024];
+    byte[] array3 = new byte[2 * 1024 * 1024];
+    prinfMemInfo();
+
+    System.out.println("\n\r3、================");
+    byte[] array4 = new byte[2 * 1024 * 1024];
+    byte[] array5 = new byte[1 * 512 * 1024];
+    prinfMemInfo();
+
+    System.out.println("\n\r4、================");
+    byte[] array6 = new byte[2 * 1024 * 1024];
+    prinfMemInfo();
+
+    System.out.println("\n\r5、================");
+    byte[] array7 = new byte[2 * 1024 * 1024];
+    array7 = null;
+    prinfMemInfo();
+
   }
 
+  private static void prinfMemInfo() {
+    ManagementFactory.getMemoryPoolMXBeans().stream().forEach(memoryPoolMXBean -> {
+      System.out.println(
+          memoryPoolMXBean.getName() + "  总量:" + memoryPoolMXBean.getUsage().getCommitted()
+              + "   使用的内存:" + memoryPoolMXBean.getUsage().getUsed());
+    });
+  }
 
 }
